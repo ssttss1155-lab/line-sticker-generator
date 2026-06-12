@@ -362,13 +362,13 @@
 
     if (stickers.length === 0) { alert('スタンプの内容を1つ以上入力してください'); return; }
 
+    const style = document.getElementById('style').value;
     let charSection = '';
     if (currentMode === 'existing') {
       if (!uploadedImageName) { alert('画像をアップロードしてください'); return; }
-      charSection = `【キャラクター参照】\n添付した画像のキャラクターデザインを忠実に再現してください。\n・見た目・色・顔のパーツ・衣装を添付画像に合わせること\n・全コマ同じキャラクターデザインで統一すること`;
+      charSection = `【キャラクター参照】\n添付した画像のキャラクターデザインを忠実に再現してください。\n・見た目・色・顔のパーツ・衣装を添付画像に合わせること\n・全コマ同じキャラクターデザインで統一すること\n・スタイル：${style}で描くこと`;
     } else {
       const charName = document.getElementById('charName').value || 'キャラクター';
-      const style = document.getElementById('style').value;
       const charDesc = document.getElementById('charDesc').value;
       charSection = `【キャラクター】\n名前：${charName}\n特徴：${charDesc}\nスタイル：${style}イラスト`;
     }
