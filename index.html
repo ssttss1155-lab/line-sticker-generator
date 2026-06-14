@@ -141,9 +141,9 @@
       <div class="form-group">
         <label>レイアウト</label>
         <select id="layout">
+          <option>2×4のグリッド（8コマ）</option>
           <option>4×4のグリッド（16コマ）</option>
           <option>3×3のグリッド（9コマ）</option>
-          <option>2×4のグリッド（8コマ）</option>
           <option>1枚ずつ個別</option>
         </select>
       </div>
@@ -225,7 +225,7 @@
   function addPreset(key) {
     document.getElementById('stickerList').innerHTML = '';
     presets[key].forEach(t => addSticker(t));
-    document.getElementById('layout').selectedIndex = 0;
+    document.getElementById('layout').selectedIndex = 0; // デフォルト8コマ
   }
 
   function generatePrompt() {
