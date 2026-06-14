@@ -225,9 +225,7 @@
   function addPreset(key) {
     document.getElementById('stickerList').innerHTML = '';
     presets[key].forEach(t => addSticker(t));
-    const layout = document.getElementById('layout');
-    if (key === 'daily16') layout.selectedIndex = 0;
-    else layout.selectedIndex = 2;
+    document.getElementById('layout').selectedIndex = 0;
   }
 
   function generatePrompt() {
