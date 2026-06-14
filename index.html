@@ -151,7 +151,7 @@
       <textarea class="result-textarea" id="resultTextarea" readonly onclick="this.select()"></textarea>
       <div class="result-actions">
         <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">📋 コピーする</button>
-        <a class="gemini-btn" href="https://gemini.google.com" target="_blank">🌐 Geminiで開く</a>
+        <button class="gemini-btn" onclick="copyAndOpenGemini()">🌐 Geminiで開く</button>
       </div>
     </div>
   </div>
@@ -177,7 +177,11 @@ const presets = {
 
 const layoutMap = {
   8: '2×4のグリッド（8コマ）',
+  9: '3×3のグリッド（9コマ）',
   16: '4×4のグリッド（16コマ）',
+  24: '4×6のグリッド（24コマ）',
+  32: '4×8のグリッド（32コマ）',
+  40: '4×10のグリッド（40コマ）',
 };
 
 function selectStyle(el, value) {
@@ -203,16 +207,34 @@ function addSticker(text = '') {
   const list = document.getElementById('stickerList');
   const div = document.createElement('div');
   div.className = 'sticker-item';
-  div.innerHTML = `<div class="sticker-num">${list.children.length + 1}</div><input type="text" placeholder="例：おはよう｜手を振って笑顔" value="${text}"><button class="btn-remove" onclick="removeSticker(this)">×</button>`;
+  const num = document.createElement('div');
+  num.className = 'sticker-num';
+  num.textContent = list.children.length + 1;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.placeholder = '例：おはよう｜手を振って笑顔';
+  input.value = text;
+  const btn = document.createElement('button');
+  btn.className = 'btn-remove';
+  btn.textContent = '×';
+  btn.onclick = function() { removeSticker(this); };
+  div.appendChild(num);
+  div.appendChild(input);
+  div.appendChild(btn);
   list.appendChild(div);
+  // コマ数表示更新
+  updateCountDisplay();
+}
+
+function updateCountDisplay() {
+  const count = document.getElementById('stickerList').children.length;
+  document.getElementById('countDisplay').textContent = '📦 ' + count + '枚セット';
 }
 
 function removeSticker(btn) {
   btn.parentElement.remove();
   document.querySelectorAll('.sticker-item .sticker-num').forEach((el, i) => el.textContent = i + 1);
-  // コマ数表示更新
-  const count = document.getElementById('stickerList').children.length;
-  document.getElementById('countDisplay').textContent = '📦 ' + count + '枚セット';
+  updateCountDisplay();
 }
 
 function generatePrompt() {
@@ -273,6 +295,17 @@ function copyPrompt() {
     return;
   }
   showCopied();
+}
+
+function copyAndOpenGemini() {
+  const textarea = document.getElementById('resultTextarea');
+  if (!textarea.value) { alert('先にプロンプトを生成してください'); return; }
+  textarea.select();
+  textarea.setSelectionRange(0, 99999);
+  try { document.execCommand('copy'); } catch(e) {}
+  navigator.clipboard.writeText(textarea.value).catch(() => {});
+  showCopied();
+  setTimeout(() => window.open('https://gemini.google.com', '_blank'), 300);
 }
 
 function showCopied() {
