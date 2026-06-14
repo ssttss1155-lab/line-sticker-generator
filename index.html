@@ -19,6 +19,13 @@
   input:focus, select:focus, textarea:focus { outline: none; border-color: #00b900; background: white; }
   textarea { resize: vertical; min-height: 70px; }
 
+  .guide-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .guide-box { flex: 1; min-width: 200px; background: #f9fff9; border: 1.5px solid #00b900; border-radius: 12px; padding: 14px; }
+  .guide-title { font-size: 13px; font-weight: bold; color: #00b900; margin-bottom: 10px; }
+  .guide-steps { padding-left: 18px; font-size: 12px; color: #444; line-height: 2; }
+  .guide-steps strong { color: #e65100; }
+  .guide-note { font-size: 11px; color: #888; margin-top: 8px; background: #fff; border-radius: 6px; padding: 6px 8px; }
+
   .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
   .style-card { border: 2px solid #ddd; border-radius: 10px; padding: 10px 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: bold; color: #555; background: #fafafa; transition: all 0.2s; user-select: none; }
   .style-card:hover { border-color: #00b900; color: #00b900; background: #f0fff0; }
@@ -56,9 +63,37 @@
   <h1>🥷 LINEスタンプ プロンプトジェネレーター</h1>
   <p class="subtitle">入力内容をもとにGemini用プロンプトを自動生成します</p>
 
+  <!-- 使い方ガイド -->
+  <div class="card">
+    <h2>📖 使い方</h2>
+    <div class="guide-row">
+      <div class="guide-box">
+        <div class="guide-title">📁 キャラクター画像がある場合</div>
+        <ol class="guide-steps">
+          <li>スタイル・スタンプ内容を入力</li>
+          <li>「プロンプトを生成」→ コピー</li>
+          <li>Geminiを開いて<strong>画像を添付</strong></li>
+          <li>プロンプトを貼り付けて送信！</li>
+        </ol>
+        <div class="guide-note">💡 キャラクター名・特徴の入力は不要です</div>
+      </div>
+      <div class="guide-box">
+        <div class="guide-title">✨ キャラクターをゼロから作る場合</div>
+        <ol class="guide-steps">
+          <li>キャラクター名・特徴を入力</li>
+          <li>スタイル・スタンプ内容を入力</li>
+          <li>「プロンプトを生成」→ コピー</li>
+          <li>Geminiに貼り付けて送信！</li>
+        </ol>
+        <div class="guide-note">💡 画像の添付は不要です</div>
+      </div>
+    </div>
+  </div>
+
   <!-- キャラクター設定 -->
   <div class="card">
     <h2>🎨 キャラクター設定</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:12px;">既存キャラの画像がある場合は入力不要。ゼロから作る場合のみ入力してください。</p>
 
     <div class="form-row">
       <div class="form-group">
