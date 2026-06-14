@@ -140,7 +140,7 @@
       </div>
       <div class="form-group">
         <label>レイアウト</label>
-        <select id="layout">
+        <select id="layout" onchange="onLayoutChange()">
           <option>2×4のグリッド（8コマ）</option>
           <option>4×4のグリッド（16コマ）</option>
           <option>3×3のグリッド（9コマ）</option>
@@ -222,10 +222,26 @@
     document.querySelectorAll('.sticker-item .sticker-num').forEach((el, i) => el.textContent = i + 1);
   }
 
+  let currentCategory = 'basic';
+
   function addPreset(key) {
+    // カテゴリ名を記憶（例：basic16 → basic）
+    currentCategory = key.replace('16','').replace('8','');
     document.getElementById('stickerList').innerHTML = '';
     presets[key].forEach(t => addSticker(t));
-    document.getElementById('layout').selectedIndex = 0; // デフォルト8コマ
+    document.getElementById('layout').selectedIndex = 0;
+  }
+
+  function onLayoutChange() {
+    const layout = document.getElementById('layout').value;
+    const is16 = layout.includes('16');
+    const is8 = layout.includes('8');
+    if (!is16 && !is8) return;
+    const key = currentCategory + (is16 ? '16' : '8');
+    if (presets[key]) {
+      document.getElementById('stickerList').innerHTML = '';
+      presets[key].forEach(t => addSticker(t));
+    }
   }
 
   function generatePrompt() {
