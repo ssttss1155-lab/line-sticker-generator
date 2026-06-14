@@ -175,6 +175,10 @@
   function addPreset(key) {
     document.getElementById('stickerList').innerHTML = '';
     presets[key].forEach(t => addSticker(t));
+    // レイアウトを自動切替
+    const layout = document.getElementById('layout');
+    if (key === 'daily16') layout.value = '4×4のグリッド（16コマ）';
+    if (key === 'basic8' || key === 'work8') layout.value = '2×4のグリッド（8コマ）';
   }
 
   function generatePrompt() {
