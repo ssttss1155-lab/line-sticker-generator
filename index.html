@@ -140,7 +140,7 @@
       </div>
       <div class="form-group">
         <label>レイアウト</label>
-        <select id="layout">
+        <select id="layout" onchange="onLayoutChange()">
           <option>4×4のグリッド（16コマ）</option>
           <option>2×4のグリッド（8コマ）</option>
           <option>3×3のグリッド（9コマ）</option>
@@ -229,9 +229,20 @@
     const is16 = key.includes('16');
     document.getElementById('stickerList').innerHTML = '';
     presets[key].forEach(t => addSticker(t));
-    // レイアウトをプリセットに合わせて自動切替（手動変更も可）
     const layout = document.getElementById('layout');
     layout.value = is16 ? '4×4のグリッド（16コマ）' : '2×4のグリッド（8コマ）';
+  }
+
+  function onLayoutChange() {
+    const layout = document.getElementById('layout').value;
+    const is16 = layout.includes('16');
+    const is8 = layout.includes('8');
+    if (!is16 && !is8) return;
+    const key = currentCategory + (is16 ? '16' : '8');
+    if (presets[key]) {
+      document.getElementById('stickerList').innerHTML = '';
+      presets[key].forEach(t => addSticker(t));
+    }
   }
 
   function generatePrompt() {
