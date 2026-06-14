@@ -93,7 +93,14 @@
   <!-- キャラクター設定 -->
   <div class="card">
     <h2>🎨 キャラクター設定</h2>
-    <p style="font-size:12px;color:#888;margin-bottom:12px;">既存キャラの画像がある場合は入力不要。ゼロから作る場合のみ入力してください。</p>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;background:#e8f5e9;border-radius:8px;padding:10px 12px;font-size:12px;color:#2e7d32;">
+        📁 <strong>既存画像がある場合</strong><br>名前・特徴は<strong>空欄のまま</strong>でOK！<br>Geminiに画像を添付して送信してください。
+      </div>
+      <div style="flex:1;min-width:200px;background:#e3f2fd;border-radius:8px;padding:10px 12px;font-size:12px;color:#1565c0;">
+        ✨ <strong>ゼロから作る場合</strong><br>名前・特徴を入力してください。<br>画像の添付は不要です。
+      </div>
+    </div>
 
     <div class="form-row">
       <div class="form-group">
@@ -224,8 +231,8 @@
   }
 
   function generatePrompt() {
-    const charName = document.getElementById('charName').value || 'キャラクター';
-    const charDesc = document.getElementById('charDesc').value;
+    const charName = document.getElementById('charName').value.trim();
+    const charDesc = document.getElementById('charDesc').value.trim();
     const style = document.getElementById('style').value;
     const bg = document.getElementById('bg').value;
     const layout = document.getElementById('layout').value;
@@ -235,11 +242,14 @@
 
     if (stickers.length === 0) { alert('スタンプの内容を1つ以上入力してください'); return; }
 
+    const hasCharInfo = charName || charDesc;
+    const charSection = hasCharInfo
+      ? `【キャラクター】\n${charName ? '名前：' + charName + '\n' : ''}${charDesc ? '特徴：' + charDesc + '\n' : ''}スタイル：${style}`
+      : `【スタイル・キャラクター参照】\n添付した画像のキャラクターデザインを忠実に再現してください。\n・見た目・色・顔のパーツ・衣装を添付画像に合わせること\n・スタイル：${style}で描くこと`;
+
     const prompt = `以下の仕様でLINEスタンプ用の画像を生成してください。
 
-【キャラクター】
-名前：${charName}${charDesc ? '\n特徴：' + charDesc : ''}
-スタイル：${style}
+${charSection}
 
 【画像仕様】
 ・レイアウト：${layout}で1枚の画像にまとめる
