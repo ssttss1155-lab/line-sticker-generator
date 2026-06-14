@@ -141,10 +141,10 @@
       <div class="form-group">
         <label>レイアウト</label>
         <select id="layout" onchange="onLayoutChange()">
-          <option>4×4のグリッド（16コマ）</option>
-          <option>2×4のグリッド（8コマ）</option>
-          <option>3×3のグリッド（9コマ）</option>
-          <option>1枚ずつ個別</option>
+          <option value="16">4×4のグリッド（16コマ）</option>
+          <option value="8">2×4のグリッド（8コマ）</option>
+          <option value="9">3×3のグリッド（9コマ）</option>
+          <option value="1">1枚ずつ個別</option>
         </select>
       </div>
     </div>
@@ -230,15 +230,12 @@
     document.getElementById('stickerList').innerHTML = '';
     presets[key].forEach(t => addSticker(t));
     const layout = document.getElementById('layout');
-    layout.value = is16 ? '4×4のグリッド（16コマ）' : '2×4のグリッド（8コマ）';
+    layout.value = is16 ? '16' : '8';
   }
 
   function onLayoutChange() {
-    const layout = document.getElementById('layout').value;
-    const is16 = layout.includes('16');
-    const is8 = layout.includes('8');
-    if (!is16 && !is8) return;
-    const key = currentCategory + (is16 ? '16' : '8');
+    const val = document.getElementById('layout').value;
+    const key = currentCategory + (val === '16' ? '16' : '8');
     if (presets[key]) {
       document.getElementById('stickerList').innerHTML = '';
       presets[key].forEach(t => addSticker(t));
@@ -250,7 +247,9 @@
     const charDesc = document.getElementById('charDesc').value.trim();
     const style = document.getElementById('style').value;
     const bg = document.getElementById('bg').value;
-    const layout = document.getElementById('layout').value;
+    const layoutVal = document.getElementById('layout').value;
+    const layoutMap = {'16':'4×4のグリッド（16コマ）','8':'2×4のグリッド（8コマ）','9':'3×3のグリッド（9コマ）','1':'1枚ずつ個別'};
+    const layout = layoutMap[layoutVal] || layoutVal;
     const extra = document.getElementById('extraNote').value;
     const inputs = document.querySelectorAll('.sticker-item input');
     const stickers = Array.from(inputs).map((el, i) => `${i+1}. ${el.value}`).filter(s => s.trim().length > 3);
