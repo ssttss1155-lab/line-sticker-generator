@@ -222,7 +222,7 @@
     document.querySelectorAll('.sticker-item .sticker-num').forEach((el, i) => el.textContent = i + 1);
   }
 
-  let currentCategory = 'basic';
+  let currentCategory = 'daily';
 
   function addPreset(key) {
     // カテゴリ名を記憶（例：basic16 → basic）
@@ -311,6 +311,7 @@ ${stickers.join('\n')}`;
     setTimeout(() => { btn.textContent = '📋 コピーする'; btn.classList.remove('success'); }, 3000);
   }
 
+  currentCategory = 'daily';
   addPreset('daily16');
 </script>
 </body>
