@@ -6,168 +6,49 @@
 <title>LINEスタンプ プロンプトジェネレーター</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
-    background: #f0f4f8;
-    min-height: 100vh;
-    padding: 30px 20px;
-  }
+  body { font-family: 'Hiragino Sans', 'Meiryo', sans-serif; background: #f0f4f8; min-height: 100vh; padding: 30px 20px; }
   .container { max-width: 800px; margin: 0 auto; }
   h1 { text-align: center; color: #00b900; font-size: 24px; margin-bottom: 6px; }
   .subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 30px; }
-
-  .card {
-    background: white; border-radius: 16px; padding: 24px;
-    margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  }
-  .card h2 {
-    font-size: 15px; color: #333; margin-bottom: 16px;
-    padding-bottom: 8px; border-bottom: 2px solid #00b900;
-  }
-
-  .mode-toggle {
-    display: flex; border-radius: 10px; overflow: hidden;
-    border: 2px solid #00b900; margin-bottom: 20px;
-  }
-  .mode-btn {
-    flex: 1; padding: 12px; border: none; background: white;
-    color: #00b900; font-size: 14px; font-weight: bold;
-    cursor: pointer; transition: all 0.2s; font-family: inherit;
-  }
-  .mode-btn.active { background: #00b900; color: white; }
-
-  .upload-area {
-    border: 2.5px dashed #00b900; border-radius: 12px; padding: 30px;
-    text-align: center; cursor: pointer; background: #f9fff9;
-    position: relative; transition: background 0.2s;
-  }
-  .upload-area:hover { background: #f0fff0; }
-  .upload-area input[type=file] {
-    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-  }
-  .upload-icon { font-size: 40px; margin-bottom: 8px; }
-  .upload-text { color: #00b900; font-weight: bold; font-size: 15px; }
-  .upload-sub { color: #999; font-size: 12px; margin-top: 4px; }
-
-  .preview-wrap {
-    display: none; align-items: center; gap: 16px; padding: 12px;
-    background: #f9fff9; border-radius: 12px; border: 2px solid #00b900;
-  }
-  .preview-wrap img { width: 100px; height: 100px; object-fit: contain; border-radius: 8px; background: #eee; }
-  .preview-name { font-size: 13px; font-weight: bold; color: #333; }
-  .preview-change {
-    margin-top: 6px; background: none; border: 1px solid #00b900;
-    color: #00b900; border-radius: 6px; padding: 4px 10px;
-    font-size: 12px; cursor: pointer; font-family: inherit;
-  }
-
+  .card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .card h2 { font-size: 15px; color: #333; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #00b900; }
   .form-row { display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-  .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
+  .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; margin-bottom: 14px; }
   label { font-size: 12px; color: #555; margin-bottom: 5px; font-weight: bold; }
-  input, select, textarea {
-    border: 1.5px solid #ddd; border-radius: 8px; padding: 9px 12px;
-    font-size: 13px; font-family: inherit; transition: border-color 0.2s; background: #fafafa;
-  }
+  input, select, textarea { border: 1.5px solid #ddd; border-radius: 8px; padding: 9px 12px; font-size: 13px; font-family: inherit; transition: border-color 0.2s; background: #fafafa; }
   input:focus, select:focus, textarea:focus { outline: none; border-color: #00b900; background: white; }
   textarea { resize: vertical; min-height: 70px; }
 
-  .sticker-list { display: flex; flex-direction: column; gap: 8px; }
-  .sticker-item { display: flex; gap: 8px; align-items: center; }
-  .sticker-num {
-    background: #00b900; color: white; border-radius: 50%;
-    width: 26px; height: 26px; display: flex; align-items: center;
-    justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0;
-  }
-  .sticker-item input { flex: 1; }
-  .btn-add {
-    background: #f0fff0; border: 1.5px dashed #00b900; color: #00b900;
-    border-radius: 8px; padding: 8px; cursor: pointer; font-size: 13px;
-    width: 100%; margin-top: 6px; font-family: inherit;
-  }
-  .btn-add:hover { background: #e0ffe0; }
-  .btn-remove {
-    background: none; border: none; color: #ccc;
-    cursor: pointer; font-size: 18px; padding: 0 4px;
-  }
-  .btn-remove:hover { color: #ff4444; }
-
-  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .tag {
-    background: #f0fff0; border: 1px solid #00b900; color: #00b900;
-    border-radius: 20px; padding: 3px 10px; font-size: 11px;
-    cursor: pointer; user-select: none;
-  }
-  .tag:hover { background: #00b900; color: white; }
-
-  .generate-btn {
-    width: 100%; background: linear-gradient(135deg, #00b900, #00d900);
-    color: white; border: none; border-radius: 12px; padding: 16px;
-    font-size: 16px; font-weight: bold; cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,185,0,0.3); font-family: inherit;
-  }
-  .generate-btn:hover { opacity: 0.9; }
-
-  .result-area { display: none; margin-top: 20px; }
-
-  /* コピー用テキストエリア */
-  .result-textarea {
-    width: 100%; min-height: 300px;
-    background: #1a1a2e; color: #e0e0e0;
-    border: none; border-radius: 12px;
-    padding: 20px; font-size: 13px; line-height: 1.8;
-    font-family: 'Courier New', monospace;
-    resize: vertical;
-    cursor: text;
-  }
-  .result-textarea:focus { outline: 2px solid #00b900; }
-
-  .copy-hint {
-    background: #e8f5e9; border-radius: 8px; padding: 10px 14px;
-    font-size: 12px; color: #2e7d32; margin-top: 10px;
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  .result-actions { display: flex; gap: 10px; margin-top: 12px; }
-  .copy-btn {
-    flex: 1; background: #00b900; color: white; border: none;
-    border-radius: 8px; padding: 12px; font-size: 14px; font-weight: bold;
-    cursor: pointer; font-family: inherit;
-  }
-  .copy-btn.success { background: #388e3c; }
-  .gemini-btn {
-    flex: 1; background: #4285f4; color: white; border: none;
-    border-radius: 8px; padding: 12px; font-size: 14px; font-weight: bold;
-    cursor: pointer; text-decoration: none; text-align: center;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .gemini-btn:hover { background: #3367d6; }
-
-  .style-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin-top: 6px;
-  }
-  .style-card {
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: 10px 8px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    color: #555;
-    background: #fafafa;
-    transition: all 0.2s;
-    user-select: none;
-  }
+  .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+  .style-card { border: 2px solid #ddd; border-radius: 10px; padding: 10px 8px; text-align: center; cursor: pointer; font-size: 12px; font-weight: bold; color: #555; background: #fafafa; transition: all 0.2s; user-select: none; }
   .style-card:hover { border-color: #00b900; color: #00b900; background: #f0fff0; }
   .style-card.active { border-color: #00b900; background: #00b900; color: white; }
 
-  .hint-box {
-    background: #fffbe6; border: 1px solid #ffe066; border-radius: 8px;
-    padding: 10px 14px; font-size: 12px; color: #7a6000; margin-top: 12px; line-height: 1.7;
-  }
+  .sticker-list { display: flex; flex-direction: column; gap: 8px; }
+  .sticker-item { display: flex; gap: 8px; align-items: center; }
+  .sticker-num { background: #00b900; color: white; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0; }
+  .sticker-item input { flex: 1; }
+  .btn-add { background: #f0fff0; border: 1.5px dashed #00b900; color: #00b900; border-radius: 8px; padding: 8px; cursor: pointer; font-size: 13px; width: 100%; margin-top: 6px; font-family: inherit; }
+  .btn-add:hover { background: #e0ffe0; }
+  .btn-remove { background: none; border: none; color: #ccc; cursor: pointer; font-size: 18px; padding: 0 4px; }
+  .btn-remove:hover { color: #ff4444; }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .tag { background: #f0fff0; border: 1px solid #00b900; color: #00b900; border-radius: 20px; padding: 3px 10px; font-size: 11px; cursor: pointer; user-select: none; }
+  .tag:hover { background: #00b900; color: white; }
+
+  .generate-btn { width: 100%; background: linear-gradient(135deg, #00b900, #00d900); color: white; border: none; border-radius: 12px; padding: 16px; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(0,185,0,0.3); font-family: inherit; }
+  .generate-btn:hover { opacity: 0.9; }
+
+  .result-area { display: none; margin-top: 20px; }
+  .result-textarea { width: 100%; min-height: 300px; background: #1a1a2e; color: #e0e0e0; border: none; border-radius: 12px; padding: 20px; font-size: 13px; line-height: 1.8; font-family: 'Courier New', monospace; resize: vertical; cursor: text; }
+  .result-textarea:focus { outline: 2px solid #00b900; }
+  .copy-hint { background: #e8f5e9; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #2e7d32; margin-top: 10px; }
+  .result-actions { display: flex; gap: 10px; margin-top: 12px; }
+  .copy-btn { flex: 1; background: #00b900; color: white; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: inherit; }
+  .copy-btn.success { background: #388e3c; }
+  .gemini-btn { flex: 1; background: #4285f4; color: white; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: bold; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; }
+  .gemini-btn:hover { background: #3367d6; }
 </style>
 </head>
 <body>
@@ -175,51 +56,24 @@
   <h1>🥷 LINEスタンプ プロンプトジェネレーター</h1>
   <p class="subtitle">入力内容をもとにGemini用プロンプトを自動生成します</p>
 
+  <!-- キャラクター設定 -->
   <div class="card">
     <h2>🎨 キャラクター設定</h2>
-    <div class="mode-toggle">
-      <button class="mode-btn active" id="btnExisting" onclick="setMode('existing')">📁 既存の画像を使う</button>
-      <button class="mode-btn" id="btnNew" onclick="setMode('new')">✨ 新しく作る</button>
-    </div>
 
-    <div id="modeExisting">
-      <div class="upload-area" id="uploadArea">
-        <input type="file" accept="image/*" id="imageInput" onchange="onImageSelected(event)">
-        <div class="upload-icon">🖼️</div>
-        <div class="upload-text">画像をドロップ or クリックして選択</div>
-        <div class="upload-sub">PNG / JPG / GIF 対応</div>
-      </div>
-      <div class="preview-wrap" id="previewWrap">
-        <img id="previewImg" src="" alt="preview">
-        <div>
-          <div class="preview-name" id="previewName"></div>
-          <button class="preview-change" onclick="document.getElementById('imageInput2').click()">画像を変更</button>
-          <input type="file" accept="image/*" id="imageInput2" onchange="onImageSelected(event)" style="display:none">
-        </div>
-      </div>
-      <div class="hint-box">
-        💡 アップロードした画像のキャラクターを参考にする指示が自動でプロンプトに入ります。<br>
-        Geminiに貼り付ける際は<strong>プロンプトと一緒に画像も添付</strong>してください。
-      </div>
-    </div>
-
-    <div id="modeNew" style="display:none">
-      <div class="form-row">
-        <div class="form-group">
-          <label>キャラクター名</label>
-          <input type="text" id="charName" placeholder="例：忍者くん" value="忍者くん">
-        </div>
-      </div>
+    <div class="form-row">
       <div class="form-group">
-        <label>キャラクターの見た目・特徴</label>
-        <textarea id="charDesc" placeholder="例：黒い忍者装束を着た丸くてかわいいキャラクター。額に緑の手裏剣マーク。">黒い忍者装束を着た丸くてかわいいキャラクター。額に緑の手裏剣マーク。ぷっくりした頬。</textarea>
+        <label>キャラクター名</label>
+        <input type="text" id="charName" placeholder="例：忍者くん">
       </div>
     </div>
+    <div class="form-group">
+      <label>キャラクターの見た目・特徴</label>
+      <textarea id="charDesc" placeholder="例：黒い忍者装束を着た丸くてかわいいキャラクター。額に緑の手裏剣マーク。ぷっくりした頬。"></textarea>
+    </div>
 
-    <!-- 共通：スタイル選択 -->
-    <div class="form-group" style="margin-top:16px; min-width:100%">
-      <label>🎨 スタイル</label>
-      <div class="style-grid" id="styleGrid">
+    <div class="form-group">
+      <label>🖼️ スタイル</label>
+      <div class="style-grid">
         <div class="style-card active" onclick="selectStyle(this, 'かわいい・ゆるい日本のアニメ風、丸みのある線、シンプルで明るい色使い')">🐾 かわいい・ゆるい</div>
         <div class="style-card" onclick="selectStyle(this, 'ぷくぷくした風船のようなシール風イラスト、ふっくらとした輪郭、パステルカラー、ビニールのような質感')">🫧 ぷくぷくシール風</div>
         <div class="style-card" onclick="selectStyle(this, 'リアルな3Dレンダリング風イラスト、立体的な陰影、光沢感、CGキャラクター風')">✨ 3D風</div>
@@ -233,7 +87,7 @@
       <input type="hidden" id="style" value="かわいい・ゆるい日本のアニメ風、丸みのある線、シンプルで明るい色使い">
     </div>
 
-    <div class="form-row" style="margin-top:16px;">
+    <div class="form-row" style="margin-top:8px;">
       <div class="form-group">
         <label>背景</label>
         <select id="bg">
@@ -254,6 +108,7 @@
     </div>
   </div>
 
+  <!-- スタンプリスト -->
   <div class="card">
     <h2>📝 スタンプの内容リスト</h2>
     <p style="font-size:12px;color:#888;margin-bottom:10px;">各スタンプのセリフ・ポーズ・表情を入力してください</p>
@@ -269,6 +124,7 @@
     <button class="btn-add" onclick="addSticker()">＋ スタンプを追加</button>
   </div>
 
+  <!-- 追加指示 -->
   <div class="card">
     <h2>✏️ 追加指示（任意）</h2>
     <textarea id="extraNote" placeholder="例：文字はスタンプ上部に配置。絵文字も入れてほしい。線は太め。" style="min-height:60px;"></textarea>
@@ -276,12 +132,11 @@
 
   <button class="generate-btn" onclick="generatePrompt()">🚀 Geminiプロンプトを生成する</button>
 
+  <!-- 結果 -->
   <div class="result-area" id="resultArea">
     <div class="card">
       <h2>📋 生成されたプロンプト</h2>
-      <div class="copy-hint">
-        💡 下のテキストを<strong>全選択（Ctrl+A / ⌘A）してコピー</strong>するか、「コピーボタン」を使ってください
-      </div>
+      <div class="copy-hint">💡 下のテキストをクリックすると全選択されます。そのまま Ctrl+C（Mac: ⌘C）でコピーしてください</div>
       <textarea class="result-textarea" id="resultTextarea" readonly onclick="this.select()"></textarea>
       <div class="result-actions">
         <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">📋 コピーする</button>
@@ -292,43 +147,16 @@
 </div>
 
 <script>
-  function selectStyle(el, value) {
-    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('style').value = value;
-  }
-
-  let currentMode = 'existing';
-  let uploadedImageName = '';
-
   const presets = {
     basic8: ['おはよう｜手を振って元気よく挨拶、笑顔','ありがとう｜両手を合わせてお礼、にっこり笑顔','ごめんね｜頭をかいて申し訳なさそうな表情','OK｜親指を立ててサムズアップ、得意げな顔','NG｜両手でバツ印、困った顔','おつかれさま｜ぐったりと疲れた様子','バイバイ｜手を振ってさよなら','おやすみ｜目を閉じてZZZ、眠そうな顔'],
     daily16: ['おはよう｜両手を上げて元気よく、笑顔','おつかれさま｜お茶を飲みながらほっとした表情','ありがとう｜ハートを持ってにっこり','ごめんね｜汗をかきながら申し訳なさそう','了解です！｜親指立てて力強くうなずく','OK〜｜軽くウィンクしながらOKサイン','いってきます！｜元気よく手を振る','おかえり〜｜両手を広げて迎える','いま向かっています｜走っている様子','おだいじにね｜心配そうに見守る表情','がんばって！｜拳を突き上げて応援','えらい！｜キラキラした星と一緒に褒める','うれしい〜｜飛び跳ねて喜んでいる','しんどい…｜ぐったりとうなだれている','なんでやねん！｜ツッコミポーズで驚く','おやすみ｜布団に入ってZZZ'],
     work8: ['よろしくお願いします｜丁寧にお辞儀','お疲れ様です｜軽く会釈','確認します｜メモを取りながら真剣な顔','了解しました｜うなずいてOKサイン','ちょっと待って｜手のひらを向けて待つポーズ','急いでます！｜走って急いでいる様子','ありがとうございます｜深くお辞儀','お先に失礼します｜手を振って退場']
   };
 
-  let stickerCount = 0;
-
-  function setMode(mode) {
-    currentMode = mode;
-    document.getElementById('modeExisting').style.display = mode === 'existing' ? 'block' : 'none';
-    document.getElementById('modeNew').style.display = mode === 'new' ? 'block' : 'none';
-    document.getElementById('btnExisting').classList.toggle('active', mode === 'existing');
-    document.getElementById('btnNew').classList.toggle('active', mode === 'new');
-  }
-
-  function onImageSelected(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    uploadedImageName = file.name;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      document.getElementById('previewImg').src = e.target.result;
-      document.getElementById('previewName').textContent = file.name;
-      document.getElementById('uploadArea').style.display = 'none';
-      document.getElementById('previewWrap').style.display = 'flex';
-    };
-    reader.readAsDataURL(file);
+  function selectStyle(el, value) {
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('style').value = value;
   }
 
   function addSticker(text = '') {
@@ -341,10 +169,6 @@
 
   function removeSticker(btn) {
     btn.parentElement.remove();
-    renumberStickers();
-  }
-
-  function renumberStickers() {
     document.querySelectorAll('.sticker-item .sticker-num').forEach((el, i) => el.textContent = i + 1);
   }
 
@@ -354,6 +178,9 @@
   }
 
   function generatePrompt() {
+    const charName = document.getElementById('charName').value || 'キャラクター';
+    const charDesc = document.getElementById('charDesc').value;
+    const style = document.getElementById('style').value;
     const bg = document.getElementById('bg').value;
     const layout = document.getElementById('layout').value;
     const extra = document.getElementById('extraNote').value;
@@ -362,24 +189,27 @@
 
     if (stickers.length === 0) { alert('スタンプの内容を1つ以上入力してください'); return; }
 
-    const style = document.getElementById('style').value;
-    let charSection = '';
-    if (currentMode === 'existing') {
-      if (!uploadedImageName) { alert('画像をアップロードしてください'); return; }
-      charSection = `【キャラクター参照】\n添付した画像のキャラクターデザインを忠実に再現してください。\n・見た目・色・顔のパーツ・衣装を添付画像に合わせること\n・全コマ同じキャラクターデザインで統一すること\n・スタイル：${style}で描くこと`;
-    } else {
-      const charName = document.getElementById('charName').value || 'キャラクター';
-      const charDesc = document.getElementById('charDesc').value;
-      charSection = `【キャラクター】\n名前：${charName}\n特徴：${charDesc}\nスタイル：${style}イラスト`;
-    }
+    const prompt = `以下の仕様でLINEスタンプ用の画像を生成してください。
 
-    const prompt = `以下の仕様でLINEスタンプ用の画像を生成してください。\n\n${charSection}\n\n【画像仕様】\n・レイアウト：${layout}で1枚の画像にまとめる\n・背景：${bg}\n・各スタンプに日本語テキストを入れる\n・テキストは見やすいフォントで太めに\n・LINEスタンプとして使えるクオリティ\n・全コマ同じサイズ・同じ余白で整列${extra ? '\n\n【追加指示】\n' + extra : ''}\n\n【スタンプ一覧】\n${stickers.join('\n')}`;
+【キャラクター】
+名前：${charName}${charDesc ? '\n特徴：' + charDesc : ''}
+スタイル：${style}
+
+【画像仕様】
+・レイアウト：${layout}で1枚の画像にまとめる
+・背景：${bg}
+・各スタンプに日本語テキストを入れる
+・テキストは見やすいフォントで太めに
+・LINEスタンプとして使えるクオリティ
+・全コマ同じサイズ・同じ余白で整列${extra ? '\n\n【追加指示】\n' + extra : ''}
+
+【スタンプ一覧】
+${stickers.join('\n')}`;
 
     const textarea = document.getElementById('resultTextarea');
     textarea.value = prompt;
     textarea.style.height = 'auto';
     textarea.style.height = Math.min(textarea.scrollHeight, 500) + 'px';
-
     document.getElementById('resultArea').style.display = 'block';
     document.getElementById('copyBtn').textContent = '📋 コピーする';
     document.getElementById('copyBtn').classList.remove('success');
@@ -390,26 +220,16 @@
     const textarea = document.getElementById('resultTextarea');
     textarea.select();
     textarea.setSelectionRange(0, 99999);
-
     let success = false;
-    try {
-      success = document.execCommand('copy');
-    } catch(e) {}
-
+    try { success = document.execCommand('copy'); } catch(e) {}
     if (!success) {
       try {
-        navigator.clipboard.writeText(textarea.value).then(() => {
-          showCopied();
-        }).catch(() => {
+        navigator.clipboard.writeText(textarea.value).then(showCopied).catch(() => {
           textarea.select();
-          alert('テキストが選択されました。Ctrl+C（Mac: ⌘+C）でコピーしてください');
+          alert('テキストが選択されました。Ctrl+C（Mac: ⌘C）でコピーしてください');
         });
         return;
-      } catch(e) {
-        textarea.select();
-        alert('テキストが選択されました。Ctrl+C（Mac: ⌘+C）でコピーしてください');
-        return;
-      }
+      } catch(e) { textarea.select(); return; }
     }
     showCopied();
   }
@@ -418,10 +238,7 @@
     const btn = document.getElementById('copyBtn');
     btn.textContent = '✅ コピーしました！';
     btn.classList.add('success');
-    setTimeout(() => {
-      btn.textContent = '📋 コピーする';
-      btn.classList.remove('success');
-    }, 3000);
+    setTimeout(() => { btn.textContent = '📋 コピーする'; btn.classList.remove('success'); }, 3000);
   }
 
   addPreset('daily16');
