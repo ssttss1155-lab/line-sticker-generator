@@ -140,8 +140,12 @@
       </div>
       <div class="form-group">
         <label>レイアウト</label>
-        <div id="layoutDisplay" style="background:#f0fff0;border:1.5px solid #00b900;border-radius:8px;padding:9px 12px;font-size:13px;color:#333;">2×4のグリッド（8コマ）</div>
-        <input type="hidden" id="layout" value="2×4のグリッド（8コマ）">
+        <select id="layout">
+          <option>4×4のグリッド（16コマ）</option>
+          <option>2×4のグリッド（8コマ）</option>
+          <option>3×3のグリッド（9コマ）</option>
+          <option>1枚ずつ個別</option>
+        </select>
       </div>
     </div>
   </div>
@@ -225,10 +229,9 @@
     const is16 = key.includes('16');
     document.getElementById('stickerList').innerHTML = '';
     presets[key].forEach(t => addSticker(t));
-    // レイアウト表示を自動更新
-    const layoutText = is16 ? '4×4のグリッド（16コマ）' : '2×4のグリッド（8コマ）';
-    document.getElementById('layout').value = layoutText;
-    document.getElementById('layoutDisplay').textContent = layoutText;
+    // レイアウトをプリセットに合わせて自動切替（手動変更も可）
+    const layout = document.getElementById('layout');
+    layout.value = is16 ? '4×4のグリッド（16コマ）' : '2×4のグリッド（8コマ）';
   }
 
   function generatePrompt() {
@@ -300,8 +303,6 @@ ${stickers.join('\n')}`;
 
   currentCategory = 'daily';
   addPreset('daily16');
-  document.getElementById('layout').value = '4×4のグリッド（16コマ）';
-  document.getElementById('layoutDisplay').textContent = '4×4のグリッド（16コマ）';
 </script>
 </body>
 </html>
